@@ -1,0 +1,85 @@
+---
+title: "Portfoliomanagement and Financial Analysis - Assignment 1"
+subtitle: "Submit until Monday 2020-09-21, 13:00"
+author: "Lastname, Surname"
+output: html_notebook
+---
+
+
+```{r load_packs}
+pacman::p_load(tidyverse,tidyquant,FFdownload)
+```
+
+For all exercises please refer to my book [Tidy Portfoliomanagement in R](https://bookdown.org/sstoeckl/Tidy_Portfoliomanagement_in_R). Unfortunately some functions (e.g. `get_exchange()`) are not working on rstudio.cloud, so please try to solve the exercises without. Also remember, that ecverything you do below must be **explained** to me (why? what does this mean? what is the interpretation?). If you have any questions or problems, please refer to the assignment forum on moodle.
+
+## Exercise 1: xts
+
+Create a daily time series for `r lubridate::year(Sys.time())`:
+
+1. Find the subset of first and last days per month/quarter (uniquely)
+2. Take December `r lubridate::year(Sys.time())-1` and remove all weekends and holidays in Zurich (Tokyo)
+3. create a series of five dates & times in New York. Show them for New York, London and Belgrade
+
+```{r}
+?FFdownload()
+tempf <- tempfile(fileext = ".RData"); tempd <- tempdir(); temptxt <- tempfile(fileext = ".txt")
+inputlist <- c("F-F_Research_Data_Factors","F-F_Momentum_Factor","F-F_ST_Reversal_Factor","F-F_LT_Reversal_Factor")
+# Now process only these files if they can be matched (download only)
+FFdownload(exclude_daily=TRUE,tempdir=tempd,download=TRUE,download_only=FALSE,inputlist=inputlist)
+
+tempf2 <- tempfile(fileext = ".RData"); tempd2 <- tempdir()
+FFdownload(output_file = tempf2,tempdir = tempd2,exclude_daily = TRUE, download = TRUE, download_only=FALSE, listsave=temptxt)
+load(tempf2)
+FFdownload$x_25_Portfolios_5x5$monthly$average_value_weighted_returns
+
+```
+
+
+## Exercise 2: Download Financial Data and Merge
+
+Download information on all stocks currently part of the S&P500. Select 10 that have data back to 2000. Additionally download the S&P 500 index and the four Fama-French factors including the risk-free rate. Merge all data together and calculate returns (simple or continuous returns?).
+Split your data in two files: One holding daily returns and one with monthly returns. Additionally show how to we could get form long to wide format to transfer between `tibble` (`tsibble`) and xts.
+
+```{r}
+periodReturn
+to.period()
+```
+
+
+## Exercise 3: Plotting Data
+
+Carefully work through `vignette("TQ04-charting-with-tidyquant")` and create plots using [ggplot](https://ggplot2.tidyverse.org/) from the tidyverse. Select four assets to highlight all functions that are important for you!
+
+```{r}
+ggplot(aes()) + ... + facet_wrap()
+```
+
+Additionally we need statistical information, so we want to plot a histogram (including normal density), a box-plot and a qq-plot. Try to accumulate data in a meaningful way to not have 10 different plots!
+
+## Exercise 4: Statistics
+
+Here you might use all `tidyquant`-vignettes! My shiny-script here might also help you to get an idea: [www.riskindex.eu:3838/mci](www.riskindex.eu:3838/mci).
+
+### Exercise 4.1 Within securities
+
+For the four securities calculate all interesting statistics (measures of location, dispersion, skewness and kurtosis). Check returns for univariate (and multivariate) normality.
+
+```{r}
+table.Stats()
+table.DownsideRisk
+table.HigherMoments
+```
+
+### Exercise 4.2 Between securities and with index
+
+Plot all securities vis-a-vis the index. Include a regression line and regression information. Can you plot rolling correlations between assets (and/or the index)?
+
+```{r}
+table.CAPM
+```
+
+## Exercise 5: Performance Analysis
+
+Create multiple portfolios using `tq_portfolio()` (e.g. an equally weighted one, a market-value weighted one, and one where you create a trading strategy according to your liking). DO a performance analysis a la `vignette("TQ05-performance-analysis-with-tidyquant")`.
+
+
