@@ -20,6 +20,12 @@ Create a daily time series for `r lubridate::year(Sys.time())`:
 2. Take December `r lubridate::year(Sys.time())-1` and remove all weekends and holidays in Zurich (Tokyo)
 3. create a series of five dates & times in New York. Show them for New York, London and Belgrade
 
+
+## Exercise 2: Download Financial Data and Merge
+
+Download information on all stocks currently part of the S&P500. Select 10 that have data back to 2000. Additionally download the S&P 500 index and the four Fama-French factors including the risk-free rate (using my package [`ffdownload`](https://github.com/sstoeckl/ffdownload)). Merge all data together and calculate returns (simple or continuous returns?).
+Split your data in two files: One holding daily returns and one with monthly returns. Additionally show how to we could get from long to wide format to transfer between `tibble` (`tsibble`) and xts.
+
 ```{r}
 ?FFdownload()
 tempf <- tempfile(fileext = ".RData"); tempd <- tempdir(); temptxt <- tempfile(fileext = ".txt")
@@ -33,12 +39,6 @@ load(tempf2)
 FFdownload$x_25_Portfolios_5x5$monthly$average_value_weighted_returns
 
 ```
-
-
-## Exercise 2: Download Financial Data and Merge
-
-Download information on all stocks currently part of the S&P500. Select 10 that have data back to 2000. Additionally download the S&P 500 index and the four Fama-French factors including the risk-free rate. Merge all data together and calculate returns (simple or continuous returns?).
-Split your data in two files: One holding daily returns and one with monthly returns. Additionally show how to we could get form long to wide format to transfer between `tibble` (`tsibble`) and xts.
 
 ```{r}
 periodReturn
